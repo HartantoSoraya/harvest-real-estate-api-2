@@ -226,6 +226,14 @@ class MakeApiCommand extends Command
     protected function modifyRepository()
     {
         $name = $this->argument('name');
+        
+        if (!file_exists(app_path('Interfaces'))) {
+            mkdir(app_path('Interfaces'), 0777, true);
+        }
+        if (!file_exists(app_path('Repositories'))) {
+            mkdir(app_path('Repositories'), 0777, true);
+        }
+
         $interfacePath = app_path("Interfaces/{$name}RepositoryInterface.php");
         $repositoryPath = app_path("Repositories/{$name}Repository.php");
 
