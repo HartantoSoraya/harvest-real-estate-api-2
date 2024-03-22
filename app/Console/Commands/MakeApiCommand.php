@@ -226,7 +226,7 @@ class MakeApiCommand extends Command
     protected function modifyRepository()
     {
         $name = $this->argument('name');
-        
+
         if (!file_exists(app_path('Interfaces'))) {
             mkdir(app_path('Interfaces'), 0777, true);
         }
@@ -241,7 +241,45 @@ class MakeApiCommand extends Command
         $repositoryContent = "<?php\n\nnamespace App\Repositories;\n\nuse App\Interfaces\\{$name}RepositoryInterface;\n\nclass {$name}Repository implements {$name}RepositoryInterface\n{\n    //\n}\n";
 
         file_put_contents($interfacePath, $interfaceContent);
-        file_put_contents($repositoryPath, $repositoryContent);
+        file_put_contents($repositoryPath, $repositoryContent);  
+        
+        if (!file_exists(app_path('Providers/RepositoryServiceProvider.php'))) {
+            touch('Providers/RepositoryServiceProvider.php');
+
+            $repositoryServiceProviderContent =
+                <<<'EOT'
+                <?php
+
+                namespace App\Providers;
+
+                use Illuminate\Support\ServiceProvider;
+
+                class RepositoryServiceProvider extends ServiceProvider
+                {
+                    /**
+                     * Register services.
+                     *
+                     * @return void
+                     */
+                    public function register()
+                    {
+
+                    }
+
+                    /**
+                     * Bootstrap services.
+                     *
+                     * @return void
+                     */
+                    public function boot()
+                    {
+                        //
+                    }
+                }
+                EOT;        
+            file_put_contents(app_path('Providers/RepositoryServiceProvider.php'), $repositoryServiceProviderContent);
+        }
+
 
         $repositoryServiceProvider = app_path('Providers/RepositoryServiceProvider.php');
         $repositoryServiceProviderContent = file_get_contents($repositoryServiceProvider);
