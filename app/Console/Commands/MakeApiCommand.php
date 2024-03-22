@@ -244,7 +244,7 @@ class MakeApiCommand extends Command
         file_put_contents($repositoryPath, $repositoryContent);  
         
         if (!file_exists(app_path('Providers/RepositoryServiceProvider.php'))) {
-            touch('Providers/RepositoryServiceProvider.php');
+            touch(app_path('Providers/RepositoryServiceProvider.php'));
 
             $repositoryServiceProviderContent =
                 <<<'EOT'
