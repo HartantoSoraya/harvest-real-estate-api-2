@@ -171,11 +171,11 @@ class MakeApiCommand extends Command
 
             class __namePascalCase__Controller extends Controller
             {
-                protected $__nameCamelCase__;
+                protected $__nameCamelCase__Repository;
 
-                public function __construct(__namePascalCase__RepositoryInterface $__nameCamelCase__)
+                public function __construct(__namePascalCase__RepositoryInterface $__nameCamelCase__Repository)
                 {
-                    $this->__nameCamelCase__ = $__nameCamelCase__;
+                    $this->__nameCamelCase__Repository = $__nameCamelCase__Repository;
                 }
 
                 public function index(Request $request)
