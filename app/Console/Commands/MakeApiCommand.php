@@ -155,6 +155,11 @@ class MakeApiCommand extends Command
         $controllerContent .= "    }\n";
         $controllerContent .= "}\n";
 
+        // $controllerContent =
+        //     <<<'EOT'
+            
+        //     EOT;
+
         file_put_contents($controllerPath, $controllerContent);
     }
 
