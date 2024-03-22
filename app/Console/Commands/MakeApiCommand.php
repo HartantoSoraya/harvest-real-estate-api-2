@@ -294,7 +294,120 @@ class MakeApiCommand extends Command
         $repositoryPath = app_path("Repositories/{$name}Repository.php");
 
         $interfaceContent = "<?php\n\nnamespace App\Interfaces;\n\ninterface {$name}RepositoryInterface\n{\n    //\n}\n";
+
+        $interfaceContent =
+            <<<'EOT'
+            <?php
+
+            namespace App\Interfaces;
+            
+            interface __nameCamelCase__RepositoryInterface
+            {
+                public function getAll__namePascalCasePlurals__();
+            
+                public function get__nameCamelCase__ById(string $id);
+            
+                public function create__nameCamelCase__(array $data);
+            
+                public function update__nameCamelCase__(array $data, string $id);
+            
+                public function delete__nameCamelCase__(string $id);
+            }            
+            EOT;
+
+        $interfaceContent = str_replace('__namePascalCase__', $name, $interfaceContent);
+        $interfaceContent = str_replace('__namePascalCasePlurals__', Str::studly(Str::plural($name)), $interfaceContent);
+        $interfaceContent = str_replace('__nameCamelCase__', Str::camel($name), $interfaceContent);
+        $interfaceContent = str_replace('__nameSnakeCase__', Str::snake($name), $interfaceContent);
+        $interfaceContent = str_replace('__nameProperCase__', ucfirst(strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', ' ', $name))), $interfaceContent);
+        $interfaceContent = str_replace('__nameKebabCase__', Str::kebab($name), $interfaceContent);
+        $interfaceContent = str_replace('__nameCamelCasePlurals__', Str::camel(Str::plural($name)), $interfaceContent);
+
         $repositoryContent = "<?php\n\nnamespace App\Repositories;\n\nuse App\Interfaces\\{$name}RepositoryInterface;\n\nclass {$name}Repository implements {$name}RepositoryInterface\n{\n    //\n}\n";
+
+        $repositoryContent =
+            <<<'EOT'
+            <?php
+
+            namespace App\Repositories;
+            
+            use App\Interfaces\__namePascalCase__RepositoryInterface;
+            use App\Models\__namePascalCase__;
+            use Illuminate\Support\Facades\DB;
+            
+            class __namePascalCase__Repository implements __namePascalCase__RepositoryInterface
+            {
+                public function getAll__nameCamelCasePlurals__()
+                {
+                    return __namePascalCase__::all();
+                }
+            
+                public function get__namePascalCase__ById(string $id)
+                {
+                    return __namePascalCase__::findOrFail($id);
+                }
+            
+                public function create__namePascalCase__(array $data)
+                {
+                    DB::beginTransaction();
+                    
+                    try {
+                        $__nameCamelCase__ = __namePascalCase__::create($data);
+            
+                        DB::commit();
+            
+                        return $__nameCamelCase__;
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+            
+                        return $e->getMessage();
+                    }
+                }
+            
+                public function update__namePascalCase__(array $data, string $id)
+                {
+                    DB::beginTransaction();
+            
+                    try {
+                        $__nameCamelCase__ = __namePascalCase__::findOrFail($id);
+            
+                        $__nameCamelCase__->update($data);
+            
+                        DB::commit();
+            
+                        return $__nameCamelCase__;
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+            
+                        return $e->getMessage();
+                    }
+                }
+            
+                public function delete__namePascalCase__(string $id)
+                {
+                    DB::beginTransaction();
+            
+                    try {
+                        __namePascalCase__::findOrFail($id)->delete();
+            
+                        DB::commit();
+            
+                        return true;
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+            
+                        return $e->getMessage();
+                    }
+                }
+            }        
+            EOT;
+
+        $repositoryContent = str_replace('__namePascalCase__', $name, $repositoryContent);
+        $repositoryContent = str_replace('__nameCamelCase__', Str::camel($name), $repositoryContent);
+        $repositoryContent = str_replace('__nameSnakeCase__', Str::snake($name), $repositoryContent);
+        $repositoryContent = str_replace('__nameProperCase__', ucfirst(strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', ' ', $name))), $repositoryContent);
+        $repositoryContent = str_replace('__nameKebabCase__', Str::kebab($name), $repositoryContent);
+        $repositoryContent = str_replace('__nameCamelCasePlurals__', Str::camel(Str::plural($name)), $repositoryContent);
 
         file_put_contents($interfacePath, $interfaceContent);
         file_put_contents($repositoryPath, $repositoryContent);
