@@ -155,11 +155,62 @@ class MakeApiCommand extends Command
         $controllerContent .= "    }\n";
         $controllerContent .= "}\n";
 
-        // $controllerContent =
-        //     <<<'EOT'
-            
-        //     EOT;
+        $controllerContent =
+            <<<'EOT'
+            <?php
 
+            namespace App\Http\Controllers\Api;
+
+            use App\Http\Controllers\Controller;
+            use App\Http\Requests\Store__namePascalCase__Request;
+            use App\Http\Requests\Update__namePascalCase__Request;
+            use App\Http\Resources\__namePascalCase__Resource;
+            use App\Interfaces\__namePascalCase__RepositoryInterface;
+            use Illuminate\Http\Request;
+            use App\Helpers\ResponseHelper;
+
+            class __namePascalCase__Controller extends Controller
+            {
+                protected $__nameCamelCase__;
+
+                public function __construct(__namePascalCase__RepositoryInterface $__nameCamelCase__)
+                {
+                    $this->__nameCamelCase__ = $__nameCamelCase__;
+                }
+
+                public function index(Request $request)
+                {
+                    //add your code here
+                }
+
+                public function store(Store__namePascalCase__Request $request)
+                {
+                    //add your code here
+                }
+
+                public function show($id)
+                {
+                    //add your code here
+                }
+
+                public function update(Update__namePascalCase__Request $request, $id)
+                {
+                    //add your code here
+                }
+
+                public function destroy($id)
+                {
+                    //add your code here
+                }
+            }
+            EOT;
+
+        $controllerContent = str_replace('__namePascalCase__', $name, $controllerContent);
+        $controllerContent = str_replace('__nameCamelCase__', Str::camel($name), $controllerContent);
+        $controllerContent = str_replace('__nameSnakeCase__', Str::snake($name), $controllerContent);
+        $controllerContent = str_replace('__nameProperCase__', ucfirst(strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', ' ', $name))), $controllerContent);
+        $controllerContent = str_replace('__nameKebabCase__', Str::kebab($name), $controllerContent);
+        $controllerContent = str_replace('__nameCamelCasePlurals__', Str::camel(Str::plural($name)), $controllerContent);
         file_put_contents($controllerPath, $controllerContent);
     }
 
@@ -196,7 +247,7 @@ class MakeApiCommand extends Command
         $name = $this->argument('name');
         $name = Str::snake($name);
         $name = Str::plural($name);
-        $migration = database_path('migrations/'.date('Y_m_d_His').'_create_'.$name.'_table.php');
+        $migration = database_path('migrations/' . date('Y_m_d_His') . '_create_' . $name . '_table.php');
 
         $migrationContent = "<?php\n\n";
         $migrationContent .= "use Illuminate\Database\Migrations\Migration;\n";
@@ -246,8 +297,8 @@ class MakeApiCommand extends Command
         $repositoryContent = "<?php\n\nnamespace App\Repositories;\n\nuse App\Interfaces\\{$name}RepositoryInterface;\n\nclass {$name}Repository implements {$name}RepositoryInterface\n{\n    //\n}\n";
 
         file_put_contents($interfacePath, $interfaceContent);
-        file_put_contents($repositoryPath, $repositoryContent);  
-        
+        file_put_contents($repositoryPath, $repositoryContent);
+
         if (!file_exists(app_path('Providers/RepositoryServiceProvider.php'))) {
             touch(app_path('Providers/RepositoryServiceProvider.php'));
 
@@ -281,7 +332,7 @@ class MakeApiCommand extends Command
                         //
                     }
                 }
-                EOT;        
+                EOT;
             file_put_contents(app_path('Providers/RepositoryServiceProvider.php'), $repositoryServiceProviderContent);
         }
 
@@ -301,7 +352,7 @@ PHP;
 
     protected function createTest()
     {
-        $name = $this->argument('name').'API';
+        $name = $this->argument('name') . 'API';
         $test = base_path("tests/Feature/{$name}Test.php");
         $testContent =
             <<<'EOT'
@@ -324,7 +375,7 @@ PHP;
                 //
             }
             EOT;
-        $testContent = str_replace('@name', $name.'Test', $testContent);
+        $testContent = str_replace('@name', $name . 'Test', $testContent);
 
         file_put_contents($test, $testContent);
     }
