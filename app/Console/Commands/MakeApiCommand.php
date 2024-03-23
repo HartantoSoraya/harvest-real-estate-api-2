@@ -247,7 +247,7 @@ class MakeApiCommand extends Command
         $name = $this->argument('name');
         $name = Str::snake($name);
         $name = Str::plural($name);
-        $migration = database_path('migrations/' . date('Y_m_d_His') . '_create_' . $name . '_table.php');
+        $migration = database_path('migrations/'.date('Y_m_d_His').'_create_'.$name.'_table.php');
 
         $migrationContent = "<?php\n\n";
         $migrationContent .= "use Illuminate\Database\Migrations\Migration;\n";
@@ -283,10 +283,10 @@ class MakeApiCommand extends Command
     {
         $name = $this->argument('name');
 
-        if (!file_exists(app_path('Interfaces'))) {
+        if (! file_exists(app_path('Interfaces'))) {
             mkdir(app_path('Interfaces'), 0777, true);
         }
-        if (!file_exists(app_path('Repositories'))) {
+        if (! file_exists(app_path('Repositories'))) {
             mkdir(app_path('Repositories'), 0777, true);
         }
 
@@ -305,13 +305,13 @@ class MakeApiCommand extends Command
             {
                 public function getAll__namePascalCasePlurals__();
             
-                public function get__nameCamelCase__ById(string $id);
+                public function get__namePascalCase__ById(string $id);
             
-                public function create__nameCamelCase__(array $data);
+                public function create__namePascalCase__(array $data);
             
-                public function update__nameCamelCase__(array $data, string $id);
+                public function update__namePascalCase__(array $data, string $id);
             
-                public function delete__nameCamelCase__(string $id);
+                public function delete__namePascalCase__(string $id);
             }            
             EOT;
 
@@ -337,7 +337,7 @@ class MakeApiCommand extends Command
             
             class __namePascalCase__Repository implements __namePascalCase__RepositoryInterface
             {
-                public function getAll__nameCamelCasePlurals__()
+                public function getAll__namePascalCasePlurals__()
                 {
                     return __namePascalCase__::all();
                 }
@@ -403,6 +403,7 @@ class MakeApiCommand extends Command
             EOT;
 
         $repositoryContent = str_replace('__namePascalCase__', $name, $repositoryContent);
+        $repositoryContent = str_replace('__namePascalCasePlurals__', Str::studly(Str::plural($name)), $repositoryContent);
         $repositoryContent = str_replace('__nameCamelCase__', Str::camel($name), $repositoryContent);
         $repositoryContent = str_replace('__nameSnakeCase__', Str::snake($name), $repositoryContent);
         $repositoryContent = str_replace('__nameProperCase__', ucfirst(strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', ' ', $name))), $repositoryContent);
@@ -412,7 +413,7 @@ class MakeApiCommand extends Command
         file_put_contents($interfacePath, $interfaceContent);
         file_put_contents($repositoryPath, $repositoryContent);
 
-        if (!file_exists(app_path('Providers/RepositoryServiceProvider.php'))) {
+        if (! file_exists(app_path('Providers/RepositoryServiceProvider.php'))) {
             touch(app_path('Providers/RepositoryServiceProvider.php'));
 
             $repositoryServiceProviderContent =
@@ -449,7 +450,6 @@ class MakeApiCommand extends Command
             file_put_contents(app_path('Providers/RepositoryServiceProvider.php'), $repositoryServiceProviderContent);
         }
 
-
         $repositoryServiceProvider = app_path('Providers/RepositoryServiceProvider.php');
         $repositoryServiceProviderContent = file_get_contents($repositoryServiceProvider);
 
@@ -465,7 +465,7 @@ PHP;
 
     protected function createTest()
     {
-        $name = $this->argument('name') . 'API';
+        $name = $this->argument('name').'API';
         $test = base_path("tests/Feature/{$name}Test.php");
         $testContent =
             <<<'EOT'
@@ -488,7 +488,7 @@ PHP;
                 //
             }
             EOT;
-        $testContent = str_replace('@name', $name . 'Test', $testContent);
+        $testContent = str_replace('@name', $name.'Test', $testContent);
 
         file_put_contents($test, $testContent);
     }
