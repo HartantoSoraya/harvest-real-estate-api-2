@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\PropertyAmenityController;
 use App\Http\Controllers\Api\PropertyCategoryController;
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth:sanctum')->get('/me', [AuthController::class, 'me'])->name('me');
+
 
 Route::get('web-configuration', [WebConfigurationController::class, 'index']);
 
